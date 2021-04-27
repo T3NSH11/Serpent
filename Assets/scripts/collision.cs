@@ -5,13 +5,11 @@ using UnityEngine;
 public class collision : MonoBehaviour
 {
     public GameObject enemyobj;
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -22,6 +20,7 @@ public class collision : MonoBehaviour
         if(collision.gameObject.CompareTag("bullet"))
         {
             Destroy(gameObject);
+            Destroy(collision.gameObject);
         }
     }
 }

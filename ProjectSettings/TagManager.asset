@@ -4,9 +4,15 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - border
   - ground block
   - bullet
+  - grid line
+  - bottom border
+  - top border
+  - left border
+  - right border
+  - en bullet
+  - enemy
   layers:
   - Default
   - TransparentFX
@@ -17,8 +23,8 @@ TagManager:
   - 
   - 
   - grid line
-  - 
-  - 
+  - player
+  - enemy
   - 
   - 
   - 

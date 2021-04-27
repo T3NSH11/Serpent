@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,9 +9,13 @@ public class player : MonoBehaviour
     public bool goingleft = false;
     public bool goingright = false;
     public bool movementlock = false;
+    public bool isdead = false;
     public float speed;
     public GameObject bullet;
     public GameObject shootboxobj;
+    public GameObject playerobj;
+    public GameObject GOscreen;
+    public GameObject scorescript;
     void Start()
     {
         
@@ -19,10 +23,6 @@ public class player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown("escape"))
-        {
-            Application.Quit();
-        }
         if (Input.GetKeyDown("w"))
         {
             goingup = true;
@@ -59,13 +59,15 @@ public class player : MonoBehaviour
         {
             GameObject clone = Instantiate(bullet);
             clone.transform.position = shootboxobj.transform.position;
-            clone.GetComponent<Rigidbody>().velocity = shootboxobj.transform.forward * 15;
+            clone.transform.rotation = shootboxobj.transform.rotation;
+            clone.GetComponent<Rigidbody>().velocity = shootboxobj.transform.forward * 9;
+            Destroy(clone, 5.0f);
         }
     }
 
     void FixedUpdate()
     {
-        gameObject.GetComponent<Rigidbody>().velocity = transform.forward * speed;
+        gameObject.GetComponent<Rigidbody>().velocity = transform.TransformDirection(Vector3.forward) * speed;
 
         if (goingup == true && movementlock == false)
         {
@@ -90,16 +92,56 @@ public class player : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        movementlock = true;
+        if(other.gameObject.CompareTag("grid line"))
+        {
+            movementlock = true;
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
-        movementlock = false;
+        if(other.gameObject.CompareTag("grid line"))
+        {
+            movementlock = false;
+        }
     }
 
-    void OnCollisionEnter()
+    void OnCollisionEnter(Collision collision)
     {
+        if(collision.gameObject.CompareTag("enemy"))
+        {
+            Destroy(playerobj.gameObject);
+            Destroy(collision.gameObject);
+            GOscreen.SetActive(true);
+            scorescript.GetComponent<Score>().score = 0;
+        }
 
+        if(collision.gameObject.CompareTag("en bullet"))
+        {
+            Destroy(playerobj.gameObject);
+            Destroy(collision.gameObject);
+            GOscreen.SetActive(true);
+            scorescript.GetComponent<Score>().score = 0;
+        }
+
+        if(collision.gameObject.CompareTag("top border"))
+        {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 11.3f);
+        }
+
+        if(collision.gameObject.CompareTag("bottom border"))
+        {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 11.3f);
+        }
+
+        if(collision.gameObject.CompareTag("left border"))
+        {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x + 22.5f, gameObject.transform.position.y, gameObject.transform.position.z);
+        }
+
+        if(collision.gameObject.CompareTag("right border"))
+        {
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x - 22.5f, gameObject.transform.position.y, gameObject.transform.position.z);
+        }
     }
 }
